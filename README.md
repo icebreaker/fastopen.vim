@@ -2,7 +2,7 @@ fastopen.vim
 ------------
 ![Screenshot](screenshot.png)
 
-```
+```vim
 map <c-l> :call fastopen#show('argedit')<cr>
 ```
 
