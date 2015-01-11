@@ -26,7 +26,7 @@ else
 endif
 
 function! s:initialize()
-  if !exists("s:initialized")
+  if exists("s:initialized")
 	return
   endif
 
@@ -43,7 +43,7 @@ function! s:initialize()
   endif
 
   let g:fastopen_list_cmd = 'git ls-tree -r --full-tree --full-name --name-only HEAD'
-  let s:fastopen_dir = git_dir
+  let g:fastopen_dir = git_dir
 endfunction
 
 function! fastopen#show(cmd)
