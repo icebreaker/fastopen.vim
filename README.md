@@ -6,8 +6,9 @@ fastopen.vim
 map <c-l> :call fastopen#show('argedit')<cr>
 ```
 
-It will auto-detect `git` repositories if `fugitive.vim` is installed and
-use `git ls-tree`, otherwise it will fallback to a regular `find`.
+If `fugitive.vim` is installed, it will auto-detect `git` repositories
+and set `g:fastopen_list_cmd` to `git ls-files`, otherwise it will fallback 
+to a regular `find`.
 
 Contribute
 ----------
