@@ -42,7 +42,7 @@ function! s:initialize()
 	return
   endif
 
-  let g:fastopen_list_cmd = 'git ls-files -c -m -o --exclude-standard --full-name'
+  let g:fastopen_list_cmd = 'git ls-files -c -m -o --exclude-standard --full-name ' . git_dir
   let g:fastopen_dir = git_dir
 endfunction
 
