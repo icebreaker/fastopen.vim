@@ -1,7 +1,7 @@
 " Location: plugin/fastopen.vim
 " Author:   Mihail Szabolcs <https://mihail.co>
-" Version:  1.4
-" License:  Same as Vim itself.  See :help license
+" Version:  1.5
+" License:  Same as Vim itself. See :help license
 
 if exists('g:loaded_fastopen') || &cp
 	finish
@@ -13,8 +13,12 @@ if !exists('g:fastopen_dmenu_cmd')
 	let g:fastopen_dmenu_cmd = 'dmenu -i -l 10'
 endif
 
+if !exists('g:fastopen_list_fallback_cmd')
+	let g:fastopen_list_fallback_cmd = 'find . -type f'
+endif
+
 if !exists('g:fastopen_list_cmd')
-	let g:fastopen_list_cmd = 'find . -type f'
+	let g:fastopen_list_cmd = g:fastopen_list_fallback_cmd
 else
 	let s:initialized = 1
 endif
@@ -24,6 +28,14 @@ if !exists('g:fastopen_dir')
 else
 	let s:initialized = 1
 endif
+
+function! s:find_git_dir()
+	if exists('b:git_dir')
+		return b:git_dir
+	endif
+
+	return FugitiveGitDir()
+endfunction
 
 function! s:initialize()
 	if exists('s:initialized')
@@ -35,11 +47,14 @@ function! s:initialize()
 		return
 	endif
 
-	if !exists('g:fastopen_git_aware')
+	if exists('g:fastopen_git_aware')
+		let g:fastopen_list_cmd = g:fastopen_list_fallback_cmd
+		let g:fastopen_dir = ''
+	else
 		let s:initialized = 1
 	end
 
-	let git_dir = fugitive#extract_git_dir(expand('%:p'))
+	let git_dir = s:find_git_dir()
 	if empty(git_dir)
 		return
 	endif
@@ -49,8 +64,8 @@ function! s:initialize()
 		return
 	endif
 
-	let g:fastopen_list_cmd  = 'git ls-files -c -o --full-name --exclude-standard'
-	let g:fastopen_list_cmd  = 'GIT_DIR=' . git_dir . ' GIT_WORK_TREE=' . open_dir . ' ' . g:fastopen_list_cmd
+	let g:fastopen_list_cmd  = 'GIT_DIR=' . git_dir . ' GIT_WORK_TREE=' . open_dir . ' '
+	let g:fastopen_list_cmd .= 'git ls-files -c -o --full-name --exclude-standard'
 	let g:fastopen_list_cmd .= ' ' . open_dir
 	let g:fastopen_dir = open_dir
 endfunction
